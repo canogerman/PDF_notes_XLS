@@ -18,7 +18,7 @@ ws["C1"] = "Fecha"
 ws["D1"] = "Texto"
 
 # Busca todos los archivos PDF en una carpeta específica
-pdf_folder = r"C:\Notas pdf"
+pdf_folder = r"C:\Notas"
 pdf_files = [f for f in os.listdir(pdf_folder) if f.endswith(".pdf")]
 
 # Expresión regular específica para el formato "Miércoles 13 de Diciembre de 2023"
@@ -72,6 +72,9 @@ for pdf_file in pdf_files:
             start_idx = texto_acumulado.find("De mi mayor consideración:") + len("De mi mayor consideración:")
             end_idx = texto_acumulado.find("Sin otro particular saluda atte.")
             texto = texto_acumulado[start_idx:end_idx].strip()
+            
+            # Realiza reemplazos para mejorar la legibilidad en Excel
+            texto = texto.replace('.\n', '.\n---').replace('\n', '').replace('•', '\n• ').replace('---', '\n')
 
             # Busca fechas en el texto utilizando la expresión regular
             match = date_regex.search(texto_acumulado)
@@ -94,4 +97,13 @@ for pdf_file in pdf_files:
         row += 1
 
 # Guarda el libro de Excel en la ruta especificada
-wb.save(r"C:\Notas pdf\notas.xlsx")
+wb.save(r"C:\Notas\Notas.xlsx")
+
+# Información del autor
+autor = "Script creado por Germán Cano Novotny."
+
+# Mensaje de información al usuario
+print("Proceso completado. El archivo 'Notas.xlsx' ha sido generado. {}".format(autor))
+
+# Pausa para que el usuario pueda leer el mensaje antes de cerrar la consola
+input("Presiona Enter para salir...")
